@@ -1,0 +1,30 @@
+# Core backend
+fastapi
+uvicorn[standard]
+sqlalchemy
+pydantic
+sqlite-utils
+
+# Reports & Data Visualization
+pandas
+matplotlib
+seaborn
+plotly
+
+# Documentation & Interactive API
+python-multipart   # for form/file uploads if needed
+jinja2             # for rendering simple HTML reports
+markdown           # for README preview / doc rendering
+
+# Authentication & Security (bonus points)
+passlib[bcrypt]    # for hashing (if you want login system)
+python-jose[cryptography]  # for JWT auth (optional)
+
+# Testing & Quality
+pytest
+httpx              # for testing FastAPI endpoints
+black              # code formatting
+flake8             # linting
+
+# Bonus (for making UI more attractive if needed)
+streamlit          # for quick interactive dashboards

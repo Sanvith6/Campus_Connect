@@ -1,0 +1,113 @@
+📐 Design Phase
+1. Assumptions
+
+Each college can host multiple events, but event IDs are unique across the entire system.
+
+Students belong to one college only.
+
+A student can register for multiple events, but only once per event (no duplicates).
+
+Attendance is marked only for registered students.
+
+Feedback is optional, but limited to 1–5 rating with an optional comment.
+
+Cancelled events will not allow new registrations but will remain in history.
+
+System scales up to 50 colleges × 500 students × 20 events per semester.
+
+Centralized database → Easier reporting across multiple colleges.
+
+2. Data to Track
+
+Colleges (college info)
+
+Students (student info + linked to college)
+
+Events (event details + linked to college)
+
+Registrations (student ↔ event)
+
+Attendance (check-ins for registered students)
+
+Feedback (ratings + comments per event)
+
+3. Database Schema (ER Diagram)
+
+Entities & Relationships:
+
+College (1 → many) Students, Events
+
+Student (many → many) Events (via Registrations)
+
+Event (many → many) Students (via Registrations)
+
+Attendance (Student ↔ Event, status)
+
+Feedback (Student ↔ Event, rating/comment)
+
+[College]───< [Student]
+    │
+    └───< [Event] ───< [Registration] >─── [Student]
+                    ├──< [Attendance]
+                    └──< [Feedback]
+
+Tables:
+
+College: college_id, name
+
+Student: student_id, name, college_id
+
+Event: event_id, name, type, date, college_id
+
+Registration: reg_id, student_id, event_id, timestamp
+
+Attendance: att_id, student_id, event_id, status, checkin_time
+
+Feedback: fb_id, student_id, event_id, rating, comment
+
+4. API Design (Endpoints)
+Events
+
+POST /events → Create new event
+
+GET /events → List all events (filters: type, college, date)
+
+Students & Registrations
+
+POST /register → Student registers for event
+
+GET /students/{id}/events → Events a student registered in
+
+Attendance
+
+POST /attendance → Mark attendance for student
+
+GET /attendance/{event_id} → Get attendance list for event
+
+Feedback
+
+POST /feedback → Submit rating & comment
+
+GET /feedback/{event_id} → Average rating + comments
+
+Reports
+
+GET /reports/popularity → Events sorted by registrations
+
+GET /reports/participation → Events attended by each student
+
+GET /reports/top-students → Top 3 most active students
+
+(Bonus) GET /reports/filter?type=Workshop → Filter by type
+
+5. Workflow (Sequence)
+
+Event Creation → Admin adds event → stored in DB.
+
+Registration → Student selects event → entry in Registration table.
+
+Attendance → On event day → Student check-in → entry in Attendance table.
+
+Feedback → After event → Student submits rating/comment → stored in Feedback.
+
+Reporting → Queries combine these tables → generate insights.

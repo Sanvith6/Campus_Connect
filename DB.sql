@@ -1,0 +1,32 @@
+CREATE DATABASE IF NOT EXISTS DBCollege;
+USE DBCollege;
+DROP TABLE IF EXISTS feedback;
+DROP TABLE IF EXISTS registrations;
+DROP TABLE IF EXISTS events;
+DROP TABLE IF EXISTS venues;
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS notifications;
+
+
+
+CREATE TABLE users (
+    user_id CHAR(36) NOT NULL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    role ENUM('STUDENT','FACULTY','ADMIN') NOT NULL,
+    contact VARCHAR(15),
+    department VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+use DBCollege;
+CREATE TABLE attendance (
+    attendance_id CHAR(36) NOT NULL PRIMARY KEY,
+    event_id CHAR(36) NOT NULL,
+    student_id CHAR(36) NOT NULL,
+    status ENUM('PRESENT', 'ABSENT') NOT NULL,
+    marked_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (event_id) REFERENCES events(event_id),
+    FOREIGN KEY (student_id) REFERENCES users(user_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
